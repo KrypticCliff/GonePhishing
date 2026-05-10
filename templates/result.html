@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>GonePhishing — {{ filename }}</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; max-width: 720px; margin: 3rem auto; padding: 0 1rem; color: #222; }
+        h1 { margin-bottom: 0.25rem; word-break: break-all; }
+        a { color: #2563eb; }
+        .meta { background: #f7f7f7; padding: 1rem 1.25rem; border-radius: 8px; margin: 1.5rem 0; }
+        .meta div { margin: 0.25rem 0; word-wrap: break-word; }
+        .verdict { padding: 1rem 1.25rem; border-radius: 8px; margin: 0.75rem 0; }
+        .Phishing { background: #fef2f2; border-left: 4px solid #dc2626; }
+        .Legitimate { background: #f0fdf4; border-left: 4px solid #16a34a; }
+        .conf { color: #555; font-size: 0.9rem; }
+        details { margin-top: 1.5rem; }
+        summary { cursor: pointer; color: #2563eb; }
+        pre { background: #f7f7f7; padding: 1rem; border-radius: 4px; max-height: 400px; overflow: auto; white-space: pre-wrap; word-wrap: break-word; font-size: 0.9rem; }
+        .back { margin-top: 2rem; }
+    </style>
+</head>
+<body>
+    <h1>{{ filename }}</h1>
+
+    <div class="meta">
+        <div><strong>Subject:</strong> {{ record.subject or "(none)" }}</div>
+        <div><strong>From:</strong> {{ record.sender or "(none)" }}</div>
+    </div>
+
+    <p class="conf">Threshold: {{ "%.0f"|format(threshold * 100) }}% (phishing probability must reach this to flag)</p>
+
+    {% for r in results %}
+        <div class="verdict {{ r.verdict }}">
+            <strong>{{ r.model }}:</strong> {{ r.verdict }}
+            <span class="conf">
+                — phishing score {{ "%.1f"|format(r.phishing_score * 100) }}%
+                {% if r.confidence is not none %}
+                    (confidence {{ "%.1f"|format(r.confidence * 100) }}%)
+                {% endif %}
+            </span>
+        </div>
+    {% endfor %}
+
+    <details>
+        <summary>View parsed body</summary>
+        <pre>{{ record.text }}</pre>
+    </details>
+
+    <p class="back"><a href="/">&larr; Analyze another email</a></p>
+</body>
+</html>

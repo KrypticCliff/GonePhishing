@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>GonePhishing</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; max-width: 720px; margin: 3rem auto; padding: 0 1rem; color: #222; }
+        h1 { margin-bottom: 0.25rem; }
+        .subtitle { color: #666; margin-top: 0; }
+        form { background: #f7f7f7; padding: 1.5rem; border-radius: 8px; margin-top: 2rem; }
+        label { font-weight: 600; }
+        input[type=file] { display: block; margin: 1rem 0; }
+        button { background: #2563eb; color: white; border: 0; padding: 0.6rem 1.2rem; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+        button:hover { background: #1d4ed8; }
+        .error { background: #fef2f2; color: #b91c1c; padding: 0.75rem 1rem; border-radius: 4px; margin-top: 1rem; border-left: 4px solid #dc2626; }
+        .models { color: #666; font-size: 0.9rem; margin-top: 1.5rem; }
+    </style>
+</head>
+<body>
+    <h1>GonePhishing</h1>
+    <p class="subtitle">Upload an .eml file to check whether it looks like a phishing attempt.</p>
+
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+
+    <form method="post" action="/predict" enctype="multipart/form-data">
+        <label for="email">Email file (.eml):</label>
+        <input type="file" id="email" name="email" accept=".eml,message/rfc822" required>
+
+        <label for="threshold" style="margin-top:1rem;">Phishing threshold:</label>
+        <input type="number" id="threshold" name="threshold"
+               min="0" max="1" step="0.05"
+               value="{{ '%.2f'|format(threshold) }}"
+               style="width:6rem;">
+        <small style="color:#666; display:block; margin-top:0.25rem;">
+            Higher = stricter. Phishing is reported only when the model's
+            phishing-probability is at or above this value.
+        </small>
+
+        <button type="submit" style="margin-top:1rem;">Analyze</button>
+    </form>
+
+    <p class="models">Loaded models: {{ models | join(", ") }}</p>
+</body>
+</html>

@@ -1,7 +1,63 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "WebSearch",
+      "WebFetch(domain:spamassassin.apache.org)",
+      "WebFetch(domain:www2.aueb.gr)",
+      "WebFetch(domain:csmining.org)",
+      "WebFetch(domain:gtraskas.github.io)",
+      "Bash(curl -sI --max-time 10 \"http://www2.aueb.gr/users/ion/data/enron-spam/preprocessed/enron1.tar.gz\")",
+      "Bash(curl -sI --max-time 10 \"https://spamassassin.apache.org/old/publiccorpus/20030228_easy_ham.tar.bz2\")",
+      "Bash(curl -sI --max-time 10 \"https://www2.aueb.gr/users/ion/data/enron-spam/preprocessed/enron1.tar.gz\")",
+      "Bash(curl -sI --max-time 8 https://spamassassin.apache.org/old/publiccorpus/__TRACKED_VAR__)",
+      "Bash(curl -sI --max-time 10 \"http://csmining.org/index.php/spam-email-datasets-.html\")",
+      "Bash(curl -sv --max-time 10 \"http://csmining.org/index.php/spam-email-datasets-.html\")",
+      "Bash(curl -sI --max-time 10 \"https://github.com/hexgnu/spam_filter/raw/master/data/SPAMTrain.label\")",
+      "Bash(curl -sI --max-time 10 \"https://github.com/hexgnu/spam_filter/raw/master/data/TRAINING/TRAIN_00170.eml\")",
+      "Bash(curl -sI --max-time 10 \"https://raw.githubusercontent.com/hexgnu/spam_filter/master/data/SPAMTrain.label\")",
+      "Bash(curl -sI --max-time 10 \"https://raw.githubusercontent.com/hexgnu/spam_filter/master/data/TRAINING/TRAIN_00170.eml\")",
+      "Bash(curl -sI --max-time 10 \"https://web.archive.org/web/2024/http://csmining.org/tl_files/link/datasets/CSDMC2010_SPAM.tar.bz2\")",
+      "Bash(curl -sL --max-time 10 \"https://web.archive.org/web/2023/http://csmining.org/index.php/spam-email-datasets-.html\")",
+      "WebFetch(domain:web.archive.org)",
+      "Bash(curl -sL --max-time 15 \"https://web.archive.org/web/20220601120000/http://csmining.org/index.php/spam-email-datasets-.html\")",
+      "Bash(curl -sL --max-time 15 \"https://web.archive.org/web/20210601/http://csmining.org/index.php/spam-email-datasets-.html\")",
+      "Bash(curl -s --max-time 10 \"https://archive.org/wayback/available?url=csmining.org/index.php/spam-email-datasets-.html\")",
+      "Bash(curl -s --max-time 10 \"https://archive.org/wayback/available?url=csmining.org\")",
+      "Bash(curl -s --max-time 10 \"https://archive.org/wayback/available?url=csmining.org/index.php/spam-email-datasets.html\")",
+      "Bash(curl -s --max-time 10 \"https://api.github.com/repos/hexgnu/spam_filter/git/trees/HEAD?recursive=1\")",
+      "Skill(update-config)",
+      "Bash(curl -sI -o - -w \"HTTP %{http_code}\\\\n\" --max-time 15 https://monkey.org/~jose/phishing/)",
+      "WebFetch(domain:monkey.org)",
+      "Bash(curl -sI -o /dev/null -w '%{http_code} %{size_download} %{header_json}' --max-time 15 'https://monkey.org/~jose/phishing/__TRACKED_VAR__')",
+      "Bash(awk '{print $2}')",
+      "WebFetch(domain:nlp.cs.aueb.gr)",
+      "WebFetch(domain:untroubled.org)",
+      "WebFetch(domain:plg.uwaterloo.ca)",
+      "WebFetch(domain:cormack.uwaterloo.ca)",
+      "Bash(gh api *)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:zenodo.org)",
+      "WebFetch(domain:pages.cs.wisc.edu)",
+      "WebFetch(domain:academictorrents.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:trec.nist.gov)",
+      "WebFetch(domain:www.aueb.gr)",
+      "WebFetch(domain:pages.aueb.gr)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$data = [Console]::In.ReadToEnd() | ConvertFrom-Json; $f = [string]$data.tool_input.file_path; if ($f -match 'requirements\\.txt|train\\.py|scripts[/\\\\]|setup\\.py|pyproject\\.toml') { @{hookSpecificOutput=@{hookEventName='PostToolUse';additionalContext='REMINDER: A build-related file was just modified. Review README.md to check if the Setup, Data, or Training sections need updating (e.g. new flags, dependencies, or scripts).'}} | ConvertTo-Json -Compress }",
+            "shell": "powershell"
+          }
+        ]
+      }
     ]
   }
 }
