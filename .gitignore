@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project: large data and trained model artifacts
+data/raw/
+data/processed/
+models/
+*.joblib
